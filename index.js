@@ -31,10 +31,10 @@ const file = reader.readFile('./sites.xlsx');
   for (currentURL of sites) {
     await page.goto(currentURL);
     elements.push(await page.evaluate(() => ({
-      title: document.querySelector('#DynamicHeading_productTitle').innerHTML,
-      description: document.querySelector('#product-description').innerHTML,
-      price: document.querySelector('.pi-price-text span').innerText,
-      realeaseData: document.querySelector('#releaseDate-toggle-target span').innerHTML,
+      title: document.querySelector('#DynamicHeading_productTitle')?.innerText || '',
+      description: document.querySelector('#product-description')?.innerText || '',
+      realeaseData: document.querySelector('#releaseDate-toggle-target span')?.innerText || '',
+      price: document.querySelector('.price-disclaimer span') ? document.querySelector('.price-disclaimer span')?.innerText : document.querySelector('.pi-price-text span')?.innerText || ''
     })));
   }
   await browser.close();
@@ -47,7 +47,7 @@ const file = reader.readFile('./sites.xlsx');
     element.realeaseData = element.realeaseData.split('/')[2];
     element.description = element.description.replace('&amp;', '&');
     return element;
-  })
+  });
 
   //---------------WRITING ELEMENTS IN EXCEL-----------------------------------------------------------------------------------------
 
@@ -77,5 +77,3 @@ const file = reader.readFile('./sites.xlsx');
 
   wb.write('arquivo.xlsx');
 })();
-
-
